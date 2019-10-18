@@ -1,17 +1,16 @@
-import gi
-gi.require_version("Notify", "0.7")
+from datetime import date, datetime, timedelta
+from os import makedirs, path
 
-from gi.repository import GLib
-from os import path, makedirs
-from datetime import datetime, date, timedelta
+import appdirs
 
 
 class Cache:
     date_format = "%a, %d %b %Y %H:%M:%S"
 
-    def __init__(self, app_name):
+    def __init__(self, app_name: str, time_delta: timedelta):
+        self.time_delta = time_delta
         self.cache_file = path.join(
-            GLib.get_user_cache_dir(), app_name, "last_update"
+            appdirs.user_cache_dir(), app_name, "last_update"
         )
 
         cache_folder = path.dirname(self.cache_file)
@@ -20,11 +19,12 @@ class Cache:
             makedirs(cache_folder)
 
     @property
-    def last_update(self):
+    def last_update(self) -> datetime:
         """Parses the timestamp when messages have been notified the last time.
 
-        In case the last cached timestamp is not from today, return the minimal
-        date to notifiy all messages again for the first time today.
+        In case the last cached timestamp is not from today, return the
+        minimal date to notify all messages again for the first time
+        today.
         """
 
         timestamp = None
@@ -36,19 +36,18 @@ class Cache:
         except Exception:
             timestamp = datetime.min
 
-        yesterday = date.today() - timedelta(days=1)
+        yesterday = date.today() - self.time_delta
 
         if timestamp.date() <= yesterday:
             timestamp = datetime.min
 
         return timestamp
 
-    def update(self):
+    def update(self) -> None:
         """Stores the current timestamp formatted into the cache file.
 
-        This is intended to be called after all messages have been handled for
-        the current state.
+        This is intended to be called after all messages have been
+        handled for the current state.
         """
-
         with open(self.cache_file, "w") as cache:
             cache.write(datetime.now().strftime(self.date_format))

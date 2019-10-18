@@ -1,3 +1,0 @@
-notmuch
-gi
-email
