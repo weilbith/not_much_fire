@@ -51,3 +51,8 @@ a new hook. Therefore add a new line like the following into
 not-much-fire
 # or: pipx run not-much-fire
 ```
+
+Checkout `man notmuch-hooks` to get further information about hooks and
+`notmuch`. I recommend to set the `$NOTMUCH_CONFIG` environment variable to
+reach compatibility with the [XDG base directory
+standard](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html).
