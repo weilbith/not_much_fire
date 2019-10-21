@@ -3,8 +3,9 @@ from re import sub
 from typing import List
 
 import notmuch
-from not_much_fire.cache import Cache
 from notmuch import Message
+
+from not_much_fire.cache import Cache
 
 
 class Database:

@@ -7,8 +7,7 @@ import appdirs
 class Cache:
     date_format = "%a, %d %b %Y %H:%M:%S"
 
-    def __init__(self, app_name: str, time_delta: timedelta):
-        self.time_delta = time_delta
+    def __init__(self, app_name: str):
         self.cache_file = path.join(
             appdirs.user_cache_dir(), app_name, "last_update"
         )
@@ -36,7 +35,7 @@ class Cache:
         except Exception:
             timestamp = datetime.min
 
-        yesterday = date.today() - self.time_delta
+        yesterday = date.today() - timedelta(days=1)
 
         if timestamp.date() <= yesterday:
             timestamp = datetime.min

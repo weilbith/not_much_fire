@@ -1,7 +1,8 @@
 from email.utils import parseaddr
 
-import notify2
 from notmuch import Message
+
+import notify2
 
 
 class Notifier:

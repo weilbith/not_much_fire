@@ -1,5 +1,3 @@
-from datetime import timedelta
-
 import click
 
 from not_much_fire.cache import Cache
@@ -9,25 +7,6 @@ from not_much_fire.notifier import Notifier
 _APP_NAME = "not-much-fire"
 
 
-def validate_time_delta(ctx, param, value: str) -> timedelta:
-    time_delta_parts = value.split(":")
-
-    if (
-        len(time_delta_parts) != 3
-        and all(len(part) == 2 for part in time_delta_parts)
-        and all(part.isdigit() for part in time_delta_parts)
-    ):
-        raise click.BadParameter(
-            "The time-delta format must be 'hh:mm:ss' ({value})!"
-        )
-
-    return timedelta(
-        hours=int(time_delta_parts[0]),
-        minutes=int(time_delta_parts[1]),
-        seconds=int(time_delta_parts[2]),
-    )
-
-
 @click.command()
 @click.option(
     "--notmuch-query",
@@ -35,27 +14,18 @@ def validate_time_delta(ctx, param, value: str) -> timedelta:
     type=str,
     default="is:unread and is:inbox",
     show_default=True,
+    metavar="<query>",
 )
-@click.option(
-    "--time-delta",
-    help=(
-        "Amount of time, which when passed since the last notification of a mail, "
-        "it gets notified again if still unread. It must follow the format: 'hh:mm:ss'."
-    ),
-    type=str,
-    default="24:00:00",
-    show_default=True,
-    callback=validate_time_delta,
-)
-def main(notmuch_query: str, time_delta: timedelta):
+def main(notmuch_query: str):
     """A simple Notmuch notification tool.
 
     Requests Notmuch for new unread messages and send notifications to
-    the desktop environment. Already notified messages get shown again
-    after a specific amount of time if they remain unread.
+    the desktop environment. Already notified messages get not shown
+    again for a whole day. If they remain unread, they get are handled
+    again on the next day.
     """
 
-    cache = Cache(_APP_NAME, time_delta)
+    cache = Cache(_APP_NAME)
     database = Database(cache, notmuch_query)
     notifier = Notifier(_APP_NAME)
 
