@@ -4,10 +4,11 @@ build-backend = "poetry.masonry.api"
 
 [tool.poetry]
 name = "not-much-fire"
-version = "0.1.1"
+version = "0.1.2"
 description = "A simple Notmuch notification tool"
 authors = ["Thore Weilbier <thore@weilbier.net>"]
 repository = "https://github.com/weilbith/not-much-fire"
+readme = "README.md"
 packages = [
     { include = "not_much_fire" },
 ]
